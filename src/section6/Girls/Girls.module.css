@@ -1,0 +1,32 @@
+.button {
+    padding:10px;
+    border: 1px solid aquamarine;
+    background-color: crimson;
+    color: salmon;
+}
+
+.button:hover {
+    background-color: salmon;
+    color: crimson;
+}
+
+.button.red {
+    background-color: black;
+    color: aqua;
+}
+
+.button.red:hover {
+    background-color: aqua;
+    color: black;
+}
+
+.img {
+    width:70%;
+}
+
+.div {
+    margin: 20px auto;
+    text-align: center;
+    width: 80%;
+    background-color: #F6DDD8 ;
+}
