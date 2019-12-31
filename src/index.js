@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './section4/App';
+import App from './section5/GirlsCssModule/App';
 
 ReactDOM.render(
     <App />, 

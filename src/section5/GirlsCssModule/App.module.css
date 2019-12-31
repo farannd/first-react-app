@@ -1,0 +1,38 @@
+:global body {
+    background-color: #eee;
+    text-align: center;
+    margin: 20px auto;
+}
+
+:global img {
+    width: 50%;
+}
+
+.pink{
+    background-color: pink;
+}
+
+.button{
+    padding: 8px;
+    border: 1px solid cornflowerblue;
+    border-radius: 1px 1px;
+    background-color: salmon;
+    color: crimson;
+}
+
+.button:hover{
+    background-color: crimson;
+    color: salmon;
+}
+
+.button.red{
+    background-color: aqua;
+    color: black;
+}
+
+.button.red:hover{
+    background-color: black;
+    color: aqua;
+}
+
+
