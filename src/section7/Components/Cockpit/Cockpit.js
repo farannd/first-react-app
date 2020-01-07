@@ -1,8 +1,13 @@
-import React, {useEffect} from 'react'
-import Person from '../Person/Person'
+import React, {useEffect, useContext} from 'react'
+
+import AuthContext from '../../context/auth-context'
 import classes from './Cockpit.module.css'
 
 const Cockpit = props => {
+    //context
+    const context = useContext(AuthContext)
+    console.log(context)
+
     //merupakan metode lifecycle dari react hooks
     useEffect(()=>{
         console.log('[Cockpit.js] useEffect')
@@ -13,7 +18,7 @@ const Cockpit = props => {
 
     //dynamic style CSS module
     const dynamicMod = [classes.button]
-    if(props.state.isClicked){
+    if(props.state.showGirls){
         dynamicMod.push(classes.red)
     }
 
@@ -29,15 +34,10 @@ const Cockpit = props => {
     return(
         <div>
                 <h1 className={styleSheet.join(" ")}>React App</h1>
-                {/* INLINE CONDITIONAL */}
-                {
-                    props.state.isLoggedIn === true ?
-                        <Person />
-                    : <h2>Nadiyah Sayang</h2>
-                }
                 <button className={dynamicMod.join(" ")} onClick={props.showGirls}>
                     Show Girls
                 </button>
+                <button className={classes.button} onClick={context.login}>Login</button>
         </div>
     )
 }

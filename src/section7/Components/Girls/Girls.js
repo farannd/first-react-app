@@ -1,4 +1,5 @@
 import React, {PureComponent} from 'react'
+
 import Girl from './Girl/Girl'
 
 //component ini berfungsi untuk membuat list dari component child nya yaitu Girl

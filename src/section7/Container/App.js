@@ -1,6 +1,11 @@
 import React from 'react'
+
+import AuthContext from '../context/auth-context'
+import Aux from '../hoc/Auxiliary/Auxiliary'
+import withClasses from '../hoc/withClasses/withClasses'
 import Cockpit from '../Components/Cockpit/Cockpit'
 import Girls from '../Components/Girls/Girls'
+import classes from './App.module.css'
 
 class App extends React.Component {
     //method yang akan otomatis dipanggil ketika class App digunakan
@@ -11,7 +16,7 @@ class App extends React.Component {
     }
 
     state = {
-        isLoggedIn : true,
+        authenticate: false,
         showGirls : false,
         showCockpit: true,
         girls: [
@@ -80,6 +85,13 @@ class App extends React.Component {
         })
     }
 
+    //login handler dg context
+    loginHandler = () => {
+        this.setState({
+            authenticate: !this.state.authenticate
+        })
+    }
+    
     render(){
         console.log('[App.js] render')
         // javascript way conditional
@@ -94,22 +106,28 @@ class App extends React.Component {
         }
 
         return(
-            <div>
+            <Aux>
                 <button onClick={this.clickHandlerCockpit}> Show Cockpit</button>
-                {this.state.showCockpit ?
+                <AuthContext.Provider
+                    value={{
+                        authenticate:this.state.authenticate, 
+                        login: this.loginHandler}}>
+
+                    {this.state.showCockpit ?
                     <Cockpit
-                    showCockpit={this.clickHandlerCockpit}
-                    showGirls={this.clickHandler}
-                    isIn={this.state.isLoggedIn}
-                    state={this.state} />
-                    : null
-                }
+                        showCockpit={this.clickHandlerCockpit}
+                        showGirls={this.clickHandler}
+                        state={this.state} />
+                        : null
+                    }
             
-                {/* Javascript Way Conditional */}
-                {show}
-            </div>
+                    {/* Javascript Way Conditional */}
+                    {show}
+                </AuthContext.Provider>
+
+            </Aux>
         )
     }
 }
 
-export default App
+export default withClasses(App, classes.body)
