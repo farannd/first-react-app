@@ -8,12 +8,14 @@ const burgerControl = props => {
 
     return(
         <div className={styles.BuildControls}>
-        <p>Price : $ {props.price}</p>
+        <p>Current Price : $ {props.price}</p>
         {keys.map(igKey=>{
             return (
                     <BuildControl
                     igKey = {igKey}
                     key = {igKey}
+                    price = {props.ingredients[igKey].price}
+                    disable = {props.disable}
                     add = {props.add}
                     remove = {props.remove} />
             )}

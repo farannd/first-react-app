@@ -7,27 +7,31 @@ import BuildControls from '../../components/Burger/BuildControls/BuildControls'
 class BurgerBuilder extends Component {
     state = {
         ingredients: {
-            salad: 0,
-            bacon: 0,
-            cheese: 0,
-            meat: 0
+            salad: {
+                count: 0,
+                price: 0.25
+            },
+            bacon: {
+                count: 0,
+                price: 1
+            },
+            cheese: {
+                count: 0,
+                price: 0.75
+            },
+            meat: {
+                count: 0,
+                price: 1.25
+            },
         },
         totalPrice: 4,
-        price: {
-            salad: 0.25,
-            bacon: 1,
-            cheese: 0.75,
-            meat: 1.25
-        }
     }
 
     addIngredientsHandler = type => {
-        let newIngredients = {
-            ...this.state.ingredients
-        }
-        newIngredients[type] += 1
+        let newIngredients = JSON.parse(JSON.stringify(this.state.ingredients))
+        newIngredients[type].count += 1
 
-        let newPrice = this.state.totalPrice + this.state.price[type]
+        let newPrice = this.state.totalPrice + newIngredients[type].price
 
         this.setState({
             ingredients: newIngredients,
@@ -36,15 +40,13 @@ class BurgerBuilder extends Component {
     }
 
     removeIngredientsHandler = type => {
-        let newIngredients = {
-            ...this.state.ingredients
-        }
+        let newIngredients = JSON.parse(JSON.stringify(this.state.ingredients))
 
         let newPrice = this.state.totalPrice;
 
-        if(newIngredients[type]>0){
-            newIngredients[type] -= 1
-            newPrice = this.state.totalPrice - this.state.price[type]
+        if(newIngredients[type].count>0){
+            newIngredients[type].count -= 1
+            newPrice -= newIngredients[type].price
         }
     
         this.setState({
@@ -53,8 +55,13 @@ class BurgerBuilder extends Component {
         })
     }
 
-
     render(){
+        const disable = JSON.parse(JSON.stringify(this.state.ingredients))
+        for(let key in disable){
+            if (disable[key].count === 0) disable[key].count = true
+            else disable[key].count = false
+        };
+
         return(
             <Aux>
                 <Burger
@@ -62,6 +69,7 @@ class BurgerBuilder extends Component {
                 <BuildControls
                     ingredients = {this.state.ingredients}
                     price = {this.state.totalPrice}
+                    disable = {disable}
                     add = {this.addIngredientsHandler}
                     remove = {this.removeIngredientsHandler}/>
             </Aux>

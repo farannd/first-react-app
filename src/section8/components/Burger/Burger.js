@@ -5,6 +5,8 @@ import BurgerIngredient from './BurgerIngredients/BurgerIngredient'
 
 
 const burger = props => {
+    console.log(props.ingredients)
+
     //untuk membuat array yang berisikan nilai key dari object
     const transformedIngredients= Object.keys(props.ingredients)
     console.log(transformedIngredients);
@@ -13,7 +15,7 @@ const burger = props => {
     //dengan jumlah yang ditentukan dari object ingredient (misal meat:2, maka akan membuat array berjumlah 2, [[2], ..])
     let result = transformedIngredients.map(igKey=>{
         //untuk membuat array
-        let result = [...Array(props.ingredients[igKey])]
+        let result = [...Array(props.ingredients[igKey].count)]
         console.log(result)
         return result.map((_,index)=>{
             let result = <BurgerIngredient key={igKey + index} types={igKey} />
