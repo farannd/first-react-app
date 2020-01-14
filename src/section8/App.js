@@ -1,15 +1,14 @@
 import React from 'react'
 
-import Layout from './components/Layout/Layout'
-import BurgerBuild from './containers/BurgerBuilder/BurgerBuilder'
+import Layout from './containers/Layout/Layout'
+import BurgerBuilder from './containers/BurgerBuilder/BurgerBuilder'
 
 class App extends React.Component {
     render(){
         return(
             <div>
-                <h1>BurgerBuild App</h1>
                 <Layout>
-                    <BurgerBuild/>
+                    <BurgerBuilder/>
                 </Layout>
             </div>
         )

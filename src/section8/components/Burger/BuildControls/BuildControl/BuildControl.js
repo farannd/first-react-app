@@ -11,7 +11,7 @@ const buildControl = props => {
             <button 
                 className = {styles.Less} 
                 onClick = {props.remove.bind(this,props.igKey)}
-                disabled = {props.disable[props.igKey].count}>
+                disabled = {props.disableIngredient[props.igKey].count}>
                     Less</button>
             <button 
                 className={styles.More} 

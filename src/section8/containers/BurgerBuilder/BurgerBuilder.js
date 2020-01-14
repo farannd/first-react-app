@@ -3,6 +3,8 @@ import React, {Component} from 'react'
 import Aux from '../../hoc/Auxiliary'
 import Burger from '../../components/Burger/Burger'
 import BuildControls from '../../components/Burger/BuildControls/BuildControls'
+import Modal from '../../components/UI/Modal/Modal'
+import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary'
 
 class BurgerBuilder extends Component {
     state = {
@@ -25,6 +27,8 @@ class BurgerBuilder extends Component {
             },
         },
         totalPrice: 4,
+        totalCount: true,
+        purchasing: false
     }
 
     addIngredientsHandler = type => {
@@ -37,6 +41,8 @@ class BurgerBuilder extends Component {
             ingredients: newIngredients,
             totalPrice: newPrice
         })
+
+        this.orderHandler(newIngredients)
     }
 
     removeIngredientsHandler = type => {
@@ -53,9 +59,38 @@ class BurgerBuilder extends Component {
             ingredients: newIngredients,
             totalPrice: newPrice
         })
+        this.orderHandler(newIngredients)
     }
 
-    render(){
+    orderHandler = ingredients => {
+        let newOrder = null
+        for (let key in ingredients){
+            newOrder = newOrder + ingredients[key].count
+        }
+        if(newOrder<= 0) {
+            this.setState({
+                totalCount: true
+            })
+        } else {
+            this.setState({
+                totalCount: false
+            })
+        }
+    }
+
+    purchaseHandler = () => {
+        this.setState({purchasing: true})
+    }
+
+    purchaseCancelHandler = () => {
+        this.setState({purchasing: false})
+    }
+
+    purchaseContinueHandler = () => {
+        alert('Continue')
+    }
+
+    render = () => {
         const disable = JSON.parse(JSON.stringify(this.state.ingredients))
         for(let key in disable){
             if (disable[key].count === 0) disable[key].count = true
@@ -64,14 +99,25 @@ class BurgerBuilder extends Component {
 
         return(
             <Aux>
+                <Modal 
+                    show = {this.state.purchasing}
+                    cancelOrder = {this.purchaseCancelHandler}>
+                    <OrderSummary
+                        ingredients = {this.state.ingredients}
+                        price = {this.state.totalPrice}
+                        cancelOrder = {this.purchaseCancelHandler}
+                        continueOrder = {this.purchaseContinueHandler}/>
+                </Modal>
                 <Burger
                     ingredients = {this.state.ingredients}/>
                 <BuildControls
                     ingredients = {this.state.ingredients}
                     price = {this.state.totalPrice}
-                    disable = {disable}
+                    disableIngredient = {disable}
+                    disableOrder = {this.state.totalCount}
                     add = {this.addIngredientsHandler}
-                    remove = {this.removeIngredientsHandler}/>
+                    remove = {this.removeIngredientsHandler}
+                    orderPurchase = {this.purchaseHandler}/>
             </Aux>
         )
     }
