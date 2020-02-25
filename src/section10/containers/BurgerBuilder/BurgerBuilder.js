@@ -20,19 +20,25 @@ class BurgerBuilder extends Component {
 		//untuk menentukan apakah button order di klik atau tidak shg modal ditampilkan
 		purchasing: false,
 		//untuk mengecek apakah button purchasing di klik shg menampilkan loader
-		loadingPurchasing: false
+		loadingPurchasing: false,
+		//handler untuk ketika terjadi gagal dalam fetching data dari database
+		error: false
 	};
 
 	componentDidMount() {
 		axiosOrders
-			.get('https://react-app-burger-farand.firebaseio.com/ingredients.json')
+			.get('/ingredients.json')
 			.then((response) => {
 				this.setState({
 					ingredients: response.data
 				});
 				return response;
 			})
-			.catch((error) => Promise.reject(error));
+			.catch((error) => {
+				this.setState({
+					error: error.message
+				});
+			});
 	}
 
 	//untuk menambahkan ingredient dan total price
@@ -101,10 +107,10 @@ class BurgerBuilder extends Component {
 
 		const order = {
 			ingredients: this.state.ingredients,
-			totalPrice: this.totalPrice,
+			totalPrice: this.state.totalPrice,
 			customer: {
-				name: 'nadiyah',
-				address: 'karawaci'
+				name: 'rose',
+				address: 'korea'
 			},
 			methodDelivery: 'fastest'
 		};
@@ -128,15 +134,36 @@ class BurgerBuilder extends Component {
 			else disable[key].count = false;
 		}
 
-		//untuk loader purchase
-		let orderSummary = (
-			<OrderSummary
-				ingredients={this.state.ingredients}
-				price={this.state.totalPrice}
-				cancelOrder={this.purchaseCancelHandler}
-				continueOrder={this.purchaseContinueHandler}
-			/>
-		);
+		//untuk loader menunggu data ingredient yang fetch dari database
+		let orderSummary = null;
+		let burger = this.state.error ? this.state.error : <Spinner />;
+
+		if (this.state.ingredients) {
+			burger = (
+				<Aux>
+					<Burger ingredients={this.state.ingredients} />
+					<BuildControls
+						ingredients={this.state.ingredients}
+						price={this.state.totalPrice}
+						disableIngredient={disable}
+						disableOrder={this.state.totalCount}
+						add={this.addIngredientsHandler}
+						remove={this.removeIngredientsHandler}
+						orderPurchase={this.purchaseHandler}
+					/>
+				</Aux>
+			);
+			orderSummary = (
+				<OrderSummary
+					ingredients={this.state.ingredients}
+					price={this.state.totalPrice}
+					cancelOrder={this.purchaseCancelHandler}
+					continueOrder={this.purchaseContinueHandler}
+				/>
+			);
+		}
+
+		//untuk loader menunggu post data purchase order ke database
 		if (this.state.loadingPurchasing) {
 			orderSummary = <Spinner />;
 		}
@@ -150,22 +177,11 @@ class BurgerBuilder extends Component {
 				>
 					{orderSummary}
 				</Modal>
-
-				<Burger ingredients={this.state.ingredients} />
-
-				<BuildControls
-					ingredients={this.state.ingredients}
-					price={this.state.totalPrice}
-					disableIngredient={disable}
-					disableOrder={this.state.totalCount}
-					add={this.addIngredientsHandler}
-					remove={this.removeIngredientsHandler}
-					orderPurchase={this.purchaseHandler}
-				/>
+				{burger}
 				{this.props.children}
 			</Aux>
 		);
 	};
 }
 
-export default withErrorHandler(BurgerBuilder);
+export default withErrorHandler(BurgerBuilder, axiosOrders);

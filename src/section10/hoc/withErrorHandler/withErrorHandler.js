@@ -2,45 +2,58 @@ import React, { Component } from 'react';
 
 import Aux from '../Auxiliary/Auxiliary';
 import Modal from '../../components/UI/Modal/Modal';
-import axios from '../../axios-orders';
 
-const withErrorHandler = (WrappedComponent) => {
+const withErrorHandler = (WrappedComponent, axios) => {
 	return class extends Component {
-		state = {
-			error: null
-		};
-
-		componentDidMount() {
-			axios.interceptors.request.use(
-				(req) => {
-					this.setState({ error: null });
-					return req;
-				},
-				(error) => {
-					this.setState({ error: error });
-					return Promise.reject(error);
-				}
-			);
-			axios.interceptors.response.use(
+		constructor(props) {
+			super(props);
+			this.state = {
+				error: false
+			};
+			this.reqInterceptor = axios.interceptors.request.use((req) => {
+				this.setState({ error: false });
+				return req;
+			});
+			this.resInterceptor = axios.interceptors.response.use(
 				(res) => res,
 				(error) => {
-					this.setState({ error: error });
-					return Promise.reject(error);
+					this.setState({ error: error.message });
 				}
 			);
 		}
 
+		//karena withErrorHandler merupakan HOC maka tidak bisa menggunakan componentDidMount()
+		//yang dimana bekerja setelah semua child component nya selesai. sehingga handler nya tidak akan bekerja
+		//oleh karena itu menggunakan componentWillMount() dan dapat diganti dg constructor
+		// componentWillMount() {
+		// 	this.reqInterceptor = axios.interceptors.request.use((req) => {
+		// 		this.setState({ error: false });
+		// 		return req;
+		// 	});
+		// 	this.resInterceptor = axios.interceptors.response.use(
+		// 		(res) => res,
+		// 		(error) => {
+		// 			this.setState({ error: error.message });
+		// 		}
+		// 	);
+		// }
+
+		componentWillUnmount() {
+			console.log('component will unmount');
+			axios.interceptors.request.eject(this.reqInterceptor);
+			axios.interceptors.response.eject(this.resInterceptor);
+		}
+
 		showErrorHandler = () => {
-			this.setState({ error: null });
+			this.setState({ error: false });
 		};
 
 		render() {
 			const props = { ...this.props };
-			console.log(props);
 			return (
 				<Aux>
-					<Modal show={this.state.error} cancelModal={this.state.showErrorHandler}>
-						{this.state.error ? this.state.error.message : null}
+					<Modal show={this.state.error} cancelModal={this.showErrorHandler}>
+						{this.state.error ? this.state.error : null}
 					</Modal>
 					{/* kegunaan attribue ..this.props adalah untuk mentransfer atau meneruskan semua prop yg diterima kepada
 					wrapped component saat dipanggil agar props dapat digunakan */}

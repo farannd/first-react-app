@@ -47,7 +47,8 @@ class Blog extends Component {
 
 	render() {
 		let posts = <p>{this.state.errorMsg}</p>;
-		if (!this.state.error) {
+		if (this.state.posts.length === 0) posts = <p> Loading </p>;
+		else if (!this.state.error && this.state.posts.length > 0) {
 			posts = this.state.posts.map((post) => {
 				return (
 					<Post
@@ -59,7 +60,6 @@ class Blog extends Component {
 				);
 			});
 		}
-
 		return (
 			<div>
 				<section className="Posts">{posts}</section>

@@ -7,7 +7,7 @@ class App extends React.Component {
 	render() {
 		return (
 			<Layout>
-				<BurgerBuilder testProps="sayang nadiyah" />
+				<BurgerBuilder testProps="love myself" />
 			</Layout>
 		);
 	}
