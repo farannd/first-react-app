@@ -101,31 +101,6 @@ class BurgerBuilder extends Component {
 		this.setState({ purchasing: false });
 	};
 
-	//ketika user nge klik continue dalam order summary
-	purchaseContinueHandler = () => {
-		this.setState({ loadingPurchasing: true });
-
-		const order = {
-			ingredients: this.state.ingredients,
-			totalPrice: this.state.totalPrice,
-			customer: {
-				name: 'rose',
-				address: 'korea'
-			},
-			methodDelivery: 'fastest'
-		};
-
-		axiosOrders
-			.post('/orders.json', order)
-			.then((response) => {
-				console.log(response);
-				this.setState({ loadingPurchasing: false, purchasing: false });
-			})
-			.catch((error) => {
-				this.setState({ loadingPurchasing: false, purchasing: false });
-			});
-	};
-
 	render = () => {
 		//untuk menentukan tombol less setiap ingredient disable atau tidak
 		const disable = JSON.parse(JSON.stringify(this.state.ingredients));
@@ -158,14 +133,8 @@ class BurgerBuilder extends Component {
 					ingredients={this.state.ingredients}
 					price={this.state.totalPrice}
 					cancelOrder={this.purchaseCancelHandler}
-					continueOrder={this.purchaseContinueHandler}
 				/>
 			);
-		}
-
-		//untuk loader menunggu post data purchase order ke database
-		if (this.state.loadingPurchasing) {
-			orderSummary = <Spinner />;
 		}
 
 		return (

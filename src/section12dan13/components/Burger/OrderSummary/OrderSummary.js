@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link, withRouter } from 'react-router-dom';
 
 import Aux from '../../../hoc/Auxiliary/Auxiliary';
 import Button from '../../UI/Button/Button';
@@ -24,11 +25,27 @@ const orderSummary = (props) => {
 			<Button clicked={props.cancelOrder} styleName="Danger">
 				Cancel
 			</Button>
-			<Button clicked={props.continueOrder} styleName="Success">
+			{/* <Button clicked={props.continueOrder} styleName="Success">
 				Continue
-			</Button>
+			</Button> */}
+			<Link
+				to={{
+					pathname: '/checkout',
+					search:
+						'?bacon=' +
+						props.ingredients['bacon'].count +
+						'&cheese=' +
+						props.ingredients['cheese'].count +
+						'&meat=' +
+						props.ingredients['meat'].count +
+						'&salad=' +
+						props.ingredients['salad'].count
+				}}
+			>
+				<Button styleName="Success">Continue</Button>
+			</Link>
 		</Aux>
 	);
 };
 
-export default orderSummary;
+export default withRouter(orderSummary);

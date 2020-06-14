@@ -8,7 +8,7 @@ const button = (props) => {
 	styleNames.push(styles[props.styleName]);
 	return (
 		<Aux>
-			<button className={styleNames.join(' ')} onClick={props.clicked}>
+			<button className={styleNames.join(' ')} onClick={props.clicked} disabled={props.disabled}>
 				{props.children}
 			</button>
 		</Aux>
